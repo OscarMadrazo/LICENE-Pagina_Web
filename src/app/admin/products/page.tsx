@@ -2,6 +2,10 @@ import { prisma } from "@/lib/prisma";
 import CreateProductForm from "@/components/CreateProductForm";
 import DeleteProductButton from "@/components/DeleteProductButton";
 import EditProductButton from "@/components/EditProductButton";
+import Image from "next/image";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ModulesPage() {
   const modules = await prisma.product.findMany({
@@ -10,7 +14,7 @@ export default async function ModulesPage() {
       category: true,
     },
     orderBy: {
-      name: "asc",
+      createdAt: "desc",
     },
   });
 
@@ -27,107 +31,134 @@ export default async function ModulesPage() {
   });
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white p-8">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen bg-zinc-950 p-4 md:p-8 text-white">
+      <div className="mx-auto max-w-7xl">
 
-        <h1 className="text-4xl font-bold mb-2">
+        <h1 className="text-3xl md:text-5xl font-bold">
           Administrar Módulos LICENE
         </h1>
 
-        <p className="text-zinc-400 mb-8">
-          Gestión de videojuegos, aplicaciones y experiencias educativas.
+        <p className="mt-3 text-zinc-400">
+          Gestión de videojuegos, aplicaciones,
+          experiencias inmersivas y tecnologías educativas.
         </p>
 
-        <CreateProductForm
-          brands={brands}
-          categories={categories}
-        />
+        <div className="mt-4 rounded-xl border border-green-500/20 bg-green-500/5 p-4">
+          <p className="text-green-400 font-semibold">
+            Total de módulos registrados: {modules.length}
+          </p>
+        </div>
 
-        <div className="overflow-hidden rounded-xl bg-zinc-900">
+        <div className="mt-8">
+          <CreateProductForm
+            brands={brands}
+            categories={categories}
+          />
+        </div>
 
-          <table className="w-full">
+        <div className="mt-10 grid gap-6">
 
-            <thead className="bg-zinc-800">
+          {modules.map((module) => (
+            <div
+              key={module.id}
+              className="
+                overflow-hidden
+                rounded-2xl
+                border
+                border-zinc-800
+                bg-zinc-900
+              "
+            >
+              <div className="grid md:grid-cols-[220px_1fr]">
 
-              <tr>
-                <th className="p-4 text-left">
-                  Módulo
-                </th>
+                <div className="h-52 md:h-full bg-zinc-800">
 
-                <th className="p-4 text-left">
-                  Identificador
-                </th>
+                  {module.imageUrl ? (
+                    <Image
+                      src={module.imageUrl}
+                      alt={module.name}
+                      width={600}
+                      height={400}
+                      className="h-full w-full object-cover"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-5xl">
+                      🎮
+                    </div>
+                  )}
 
-                <th className="p-4 text-left">
-                  Tecnología
-                </th>
+                </div>
 
-                <th className="p-4 text-left">
-                  Tipo de Experiencia
-                </th>
+                <div className="p-6">
 
-                <th className="p-4 text-left">
-                  Estado
-                </th>
+                  <div className="flex flex-wrap items-center gap-3">
 
-                <th className="p-4 text-left">
-                  Acciones
-                </th>
-              </tr>
+                    <h2 className="text-2xl font-bold">
+                      {module.name}
+                    </h2>
 
-            </thead>
-
-            <tbody>
-
-              {modules.map((module) => (
-                <tr
-                  key={module.id}
-                  className="border-t border-zinc-800"
-                >
-                  <td className="p-4">
-                    {module.name}
-                  </td>
-
-                  <td className="p-4">
-                    {module.sku}
-                  </td>
-
-                  <td className="p-4">
-                    {module.brand.name}
-                  </td>
-
-                  <td className="p-4">
-                    {module.category.name}
-                  </td>
-
-                  <td className="p-4">
-                    <span className="rounded-full bg-green-500/20 px-3 py-1 text-green-400">
+                    <span className="rounded-full bg-green-500/20 px-3 py-1 text-sm text-green-400">
                       Activo
                     </span>
-                  </td>
 
-                  <td className="p-4">
+                  </div>
 
-                    <div className="flex gap-2">
+                  <p className="mt-3 text-zinc-400">
+                    {module.description}
+                  </p>
 
-                      <EditProductButton
-                        productId={module.id}
-                      />
+                  <div className="mt-6 grid gap-4 md:grid-cols-3">
 
-                      <DeleteProductButton
-                        productId={module.id}
-                      />
+                    <div className="rounded-xl bg-zinc-800 p-4">
+                      <p className="text-sm text-zinc-500">
+                        SKU
+                      </p>
 
+                      <p className="font-semibold">
+                        {module.sku}
+                      </p>
                     </div>
 
-                  </td>
+                    <div className="rounded-xl bg-zinc-800 p-4">
+                      <p className="text-sm text-zinc-500">
+                        Tecnología
+                      </p>
 
-                </tr>
-              ))}
+                      <p className="font-semibold text-cyan-400">
+                        {module.brand.name}
+                      </p>
+                    </div>
 
-            </tbody>
+                    <div className="rounded-xl bg-zinc-800 p-4">
+                      <p className="text-sm text-zinc-500">
+                        Experiencia
+                      </p>
 
-          </table>
+                      <p className="font-semibold text-purple-400">
+                        {module.category.name}
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+
+                    <EditProductButton
+                      productId={module.id}
+                    />
+
+                    <DeleteProductButton
+                      productId={module.id}
+                    />
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          ))}
 
         </div>
 

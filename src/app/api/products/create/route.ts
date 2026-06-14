@@ -1,24 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest
+) {
   try {
     const body = await req.json();
 
-    const product = await prisma.product.create({
-      data: {
-        name: body.name,
-        description: body.description,
-        sku: body.sku,
-        price: Number(body.price),
-        stock: Number(body.stock),
-        brandId: body.brandId,
-        categoryId: body.categoryId,
-      },
-    });
+    const product =
+      await prisma.product.create({
+        data: {
+          name: body.name,
+          description: body.description,
+          sku: body.sku,
 
-    return NextResponse.json(product);
+          imageUrl:
+            body.imageUrl || null,
+
+          price: Number(
+            body.price
+          ),
+
+          stock: Number(
+            body.stock
+          ),
+
+          brandId: body.brandId,
+          categoryId:
+            body.categoryId,
+        },
+      });
+
+    return NextResponse.json({
+      success: true,
+      product,
+    });
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,

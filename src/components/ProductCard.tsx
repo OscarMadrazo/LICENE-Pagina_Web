@@ -26,17 +26,17 @@ export default function ProductCard({
         hover:shadow-[0_0_40px_rgba(34,197,94,0.20)]
       "
     >
-      <div className="relative h-60 overflow-hidden bg-zinc-800">
+      <div className="relative h-52 md:h-60 overflow-hidden bg-zinc-800">
 
         <div
           className="
             absolute
             inset-0
-            bg-gradient-to-br
+            z-10
+            bg-linear-to-br
             from-green-500/10
             via-transparent
             to-purple-500/10
-            z-10
           "
         />
 
@@ -47,12 +47,13 @@ export default function ProductCard({
             top-3
             z-20
             rounded-full
-            bg-gradient-to-r
+            bg-linear-to-r
             from-green-500
             to-purple-500
-            px-4
+            px-3
             py-1
-            text-xs
+            text-[10px]
+            md:text-xs
             font-bold
             text-white
             shadow-lg
@@ -85,12 +86,12 @@ export default function ProductCard({
               flex-col
               items-center
               justify-center
-              bg-gradient-to-br
+              bg-linear-to-br
               from-green-500/5
               to-purple-500/5
             "
           >
-            <div className="text-5xl mb-3">
+            <div className="mb-3 text-5xl">
               🎮
             </div>
 
@@ -99,15 +100,15 @@ export default function ProductCard({
             </span>
           </div>
         )}
-
       </div>
 
-      <div className="p-6">
+      <div className="p-5 md:p-6">
 
         <h3
           className="
             line-clamp-2
-            text-xl
+            text-lg
+            md:text-xl
             font-bold
             transition-all
             duration-300
@@ -139,21 +140,22 @@ export default function ProductCard({
               text-zinc-500
             "
           >
-            Experiencia educativa
+            Ecosistema Educativo
           </p>
 
           <p
             className="
-              bg-gradient-to-r
+              bg-linear-to-r
               from-green-400
               to-purple-400
               bg-clip-text
-              text-lg
+              text-base
+              md:text-lg
               font-bold
               text-transparent
             "
           >
-            Parte del Ecosistema LICENE
+            Tecnología Inclusiva
           </p>
 
         </div>
@@ -165,7 +167,7 @@ export default function ProductCard({
             block
             w-full
             rounded-xl
-            bg-gradient-to-r
+            bg-linear-to-r
             from-green-500
             to-purple-500
             py-3
