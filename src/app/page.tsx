@@ -4,6 +4,9 @@ import ProductCard from "@/components/ProductCard";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const products = await prisma.product.findMany({
     take: 8,
