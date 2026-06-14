@@ -3,28 +3,30 @@ import { prisma } from "@/lib/prisma";
 async function main() {
   const brand = await prisma.brand.create({
     data: {
-      name: "NVIDIA",
+      name: "Unity",
     },
   });
 
   const category = await prisma.category.create({
     data: {
-      name: "Tarjetas Gráficas",
+      name: "Videojuegos Educativos",
     },
   });
 
   await prisma.product.create({
     data: {
-      name: "RTX 5070",
-      description: "Tarjeta gráfica NVIDIA RTX 5070",
-      price: 18999,
-      stock: 15,
+      sku: "LICENE-001",
+      name: "LICENE 3D",
+      description:
+        "Videojuego educativo inclusivo desarrollado en Unity.",
+      price: 0,
+      stock: 999,
       brandId: brand.id,
       categoryId: category.id,
     },
   });
 
-  console.log("Producto creado");
+  console.log("Módulo LICENE creado");
 }
 
 main()
