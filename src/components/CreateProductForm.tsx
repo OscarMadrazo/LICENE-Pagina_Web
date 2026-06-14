@@ -24,18 +24,14 @@ export default function CreateProductForm({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [sku, setSku] = useState("");
-  const [price, setPrice] = useState("");
-  const [stock, setStock] = useState("");
   const [brandId, setBrandId] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
-  async function createProduct() {
+  async function createModule() {
     if (
       !name ||
       !description ||
       !sku ||
-      !price ||
-      !stock ||
       !brandId ||
       !categoryId
     ) {
@@ -52,73 +48,63 @@ export default function CreateProductForm({
         name,
         description,
         sku,
-        price,
-        stock,
+        price: 0,
+        stock: 1,
         brandId,
         categoryId,
       }),
     });
 
     if (!response.ok) {
-      alert("Error al guardar producto");
+      alert("Error al guardar módulo");
       return;
     }
 
-    alert("Producto creado correctamente");
+    alert("Módulo creado correctamente");
     window.location.reload();
   }
 
   return (
     <div className="mb-8 rounded-xl bg-zinc-900 p-6">
-      <h2 className="mb-4 text-2xl font-bold">
-        Crear Producto
+
+      <h2 className="mb-2 text-2xl font-bold">
+        Crear Módulo LICENE
       </h2>
 
+      <p className="mb-6 text-zinc-400">
+        Registra una nueva experiencia educativa dentro del ecosistema LICENE.
+      </p>
+
       <div className="grid gap-4">
+
         <input
-          placeholder="Nombre"
+          placeholder="Nombre del módulo"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 p-3"
         />
 
         <textarea
-          placeholder="Descripción"
+          placeholder="Descripción educativa"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 p-3"
         />
 
         <input
-          placeholder="SKU"
+          placeholder="Identificador del módulo"
           value={sku}
           onChange={(e) => setSku(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
-        />
-
-        <input
-          type="number"
-          placeholder="Precio"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
-        />
-
-        <input
-          type="number"
-          placeholder="Stock"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 p-3"
         />
 
         <select
           value={brandId}
           onChange={(e) => setBrandId(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 p-3"
         >
           <option value="">
-            Selecciona una marca
+            Selecciona una tecnología
           </option>
 
           {brands.map((brand) => (
@@ -134,10 +120,10 @@ export default function CreateProductForm({
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="rounded-lg bg-zinc-800 p-3"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 p-3"
         >
           <option value="">
-            Selecciona una categoría
+            Selecciona un tipo de experiencia
           </option>
 
           {categories.map((category) => (
@@ -151,12 +137,14 @@ export default function CreateProductForm({
         </select>
 
         <button
-          onClick={createProduct}
-          className="rounded-lg bg-blue-600 p-3 font-semibold hover:bg-blue-700"
+          onClick={createModule}
+          className="rounded-lg bg-cyan-600 p-3 font-semibold hover:bg-cyan-700"
         >
-          Guardar Producto
+          Guardar Módulo
         </button>
+
       </div>
+
     </div>
   );
 }

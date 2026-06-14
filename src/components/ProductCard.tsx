@@ -9,10 +9,6 @@ interface Props {
 export default function ProductCard({
   product,
 }: Props) {
-  const lowStock =
-    product.stock > 0 &&
-    product.stock <= 5;
-
   return (
     <div
       className="
@@ -21,76 +17,48 @@ export default function ProductCard({
         rounded-3xl
         border
         border-zinc-800
-        bg-zinc-900
+        bg-zinc-900/80
+        backdrop-blur-sm
         transition-all
-        duration-300
+        duration-500
         hover:-translate-y-2
-        hover:border-cyan-500
-        hover:shadow-[0_0_30px_rgba(34,211,238,0.25)]
+        hover:border-green-500
+        hover:shadow-[0_0_40px_rgba(34,197,94,0.20)]
       "
     >
-      {/* IMAGEN */}
-
       <div className="relative h-60 overflow-hidden bg-zinc-800">
 
-        {/* STOCK */}
-
-        {product.stock > 0 ? (
-          <span
-            className="
-              absolute
-              left-3
-              top-3
-              z-10
-              rounded-full
-              bg-green-500
-              px-3
-              py-1
-              text-xs
-              font-bold
-              text-black
-            "
-          >
-            EN STOCK
-          </span>
-        ) : (
-          <span
-            className="
-              absolute
-              left-3
-              top-3
-              z-10
-              rounded-full
-              bg-red-500
-              px-3
-              py-1
-              text-xs
-              font-bold
-              text-white
-            "
-          >
-            AGOTADO
-          </span>
-        )}
-
-        {/* NUEVO */}
+        <div
+          className="
+            absolute
+            inset-0
+            bg-gradient-to-br
+            from-green-500/10
+            via-transparent
+            to-purple-500/10
+            z-10
+          "
+        />
 
         <span
           className="
             absolute
-            right-3
+            left-3
             top-3
-            z-10
+            z-20
             rounded-full
-            bg-cyan-500
-            px-3
+            bg-gradient-to-r
+            from-green-500
+            to-purple-500
+            px-4
             py-1
             text-xs
             font-bold
-            text-black
+            text-white
+            shadow-lg
           "
         >
-          NUEVO
+          MÓDULO LICENE
         </span>
 
         {product.imageUrl ? (
@@ -104,22 +72,35 @@ export default function ProductCard({
               w-full
               object-cover
               transition-transform
-              duration-500
+              duration-700
               group-hover:scale-110
             "
             unoptimized
           />
         ) : (
-          <div className="flex h-full items-center justify-center">
+          <div
+            className="
+              flex
+              h-full
+              flex-col
+              items-center
+              justify-center
+              bg-gradient-to-br
+              from-green-500/5
+              to-purple-500/5
+            "
+          >
+            <div className="text-5xl mb-3">
+              🎮
+            </div>
+
             <span className="text-zinc-500">
-              Sin imagen
+              Imagen próximamente
             </span>
           </div>
         )}
 
       </div>
-
-      {/* INFO */}
 
       <div className="p-6">
 
@@ -128,8 +109,9 @@ export default function ProductCard({
             line-clamp-2
             text-xl
             font-bold
-            transition-colors
-            group-hover:text-cyan-400
+            transition-all
+            duration-300
+            group-hover:text-green-400
           "
         >
           {product.name}
@@ -138,93 +120,66 @@ export default function ProductCard({
         <p
           className="
             mt-3
-            line-clamp-3
+            line-clamp-4
             text-sm
+            leading-relaxed
             text-zinc-400
           "
         >
           {product.description}
         </p>
 
-        {/* PRECIO */}
-
         <div className="mt-6">
 
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Precio
+          <p
+            className="
+              text-xs
+              uppercase
+              tracking-wider
+              text-zinc-500
+            "
+          >
+            Experiencia educativa
           </p>
 
           <p
             className="
-              text-3xl
-              font-extrabold
-              text-cyan-400
+              bg-gradient-to-r
+              from-green-400
+              to-purple-400
+              bg-clip-text
+              text-lg
+              font-bold
+              text-transparent
             "
           >
-            $
-            {product.price.toLocaleString(
-              "es-MX"
-            )}
+            Parte del Ecosistema LICENE
           </p>
 
         </div>
 
-        {/* STOCK */}
-
-        <div className="mt-4">
-
-          {product.stock === 0 ? (
-            <p className="text-sm font-semibold text-red-400">
-              Producto agotado
-            </p>
-          ) : lowStock ? (
-            <p className="text-sm font-semibold text-yellow-400">
-              ⚠ Últimas {product.stock} piezas
-            </p>
-          ) : (
-            <p className="text-sm text-green-400">
-              ✓ {product.stock} disponibles
-            </p>
-          )}
-
-        </div>
-
-        {/* BOTON */}
-
-        {product.stock > 0 ? (
-          <Link
-            href={`/products/${product.id}`}
-            className="
-              mt-6
-              block
-              w-full
-              rounded-xl
-              bg-cyan-500
-              py-3
-              text-center
-              font-bold
-              text-black
-              transition-all
-              hover:bg-cyan-400
-            "
-          >
-            Ver Producto
-          </Link>
-        ) : (
-          <div
-            className="
-              mt-6
-              rounded-xl
-              bg-zinc-800
-              py-3
-              text-center
-              font-bold
-              text-zinc-500
-            "
-          >
-            No disponible
-          </div>
-        )}
+        <Link
+          href={`/products/${product.id}`}
+          className="
+            mt-6
+            block
+            w-full
+            rounded-xl
+            bg-gradient-to-r
+            from-green-500
+            to-purple-500
+            py-3
+            text-center
+            font-bold
+            text-white
+            transition-all
+            duration-300
+            hover:scale-105
+            hover:shadow-lg
+          "
+        >
+          Explorar Módulo
+        </Link>
 
       </div>
 

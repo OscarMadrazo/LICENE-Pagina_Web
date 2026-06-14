@@ -16,49 +16,56 @@ export default async function Home() {
     <main className="min-h-screen bg-zinc-950 text-white">
       <Navbar />
 
-      {/* HERO */}
-
       <section className="relative overflow-hidden border-b border-zinc-800">
 
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-900/20 via-blue-500/10 to-purple-900/20" />
-
+        <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 via-purple-500/10 to-green-900/20" />   
+        
         <div className="relative mx-auto max-w-7xl px-6 py-24">
 
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
 
-            <span className="rounded-full border border-cyan-500 px-4 py-2 text-sm text-cyan-400">
-              Tecnología • Gaming • Hardware Profesional
+            <span className="rounded-full border border-green-500 px-4 py-2 text-sm text-green-400">
+              Educación Inclusiva • Realidad Virtual • Realidad Mixta
             </span>
 
             <h1 className="mt-8 text-6xl font-extrabold leading-tight">
-              Construye la
-              <span className="block text-cyan-400">
-                PC de tus Sueños
+              LICENE
+              <span
+                className="
+                  block
+                  bg-gradient-to-r
+                  from-green-400
+                  to-purple-500
+                  bg-clip-text
+                  text-transparent
+                "
+              >
+                Laboratorio Interactivo de Ciencias
               </span>
             </h1>
 
             <p className="mt-6 text-xl text-zinc-400">
-              Componentes gamer, periféricos,
-              computadoras y hardware de alto
-              rendimiento para estudiantes,
-              profesionales y entusiastas.
+              Ecosistema educativo que integra videojuegos,
+              realidad virtual, realidad mixta, aplicaciones móviles
+              y plataformas colaborativas para fortalecer el aprendizaje
+              de estudiantes con necesidades específicas.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
 
               <Link
                 href="/products"
-                className="rounded-xl bg-cyan-500 px-8 py-4 font-bold text-black transition hover:bg-cyan-400"
+                className="rounded-xl bg-gradient-to-r from-green-500 to-purple-500 px-8 py-4 font-bold text-black transition hover:opacity-90"
               >
-                Explorar Productos
+                Explorar Ecosistema
               </Link>
 
-              <Link
-                href="/build-pc"
-                className="rounded-xl border border-zinc-700 px-8 py-4 font-bold transition hover:border-cyan-500"
+              <a
+                href="#tecnologias"
+                className="rounded-xl border border-zinc-700 px-8 py-4 font-bold transition hover:border-green-500"
               >
-                Arma tu PC
-              </Link>
+                Ver Tecnologías
+              </a>
 
             </div>
 
@@ -68,80 +75,146 @@ export default async function Home() {
 
       </section>
 
-      {/* CATEGORIAS */}
-
       <section className="mx-auto max-w-7xl px-6 py-16">
 
-        <h2 className="mb-8 text-3xl font-bold">
-          Categorías Destacadas
+        <h2 className="mb-8 text-4xl font-bold">
+          Ecosistema LICENE
         </h2>
 
         <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
 
           {[
-            "🎮 Gaming",
-            "🖥 GPUs",
-            "⚡ Procesadores",
-            "🧠 RAM",
-            "💻 Laptops",
-            "⌨ Periféricos",
+            "🎮 LICENE 3D",
+            "📚 Símbolos Matemáticos",
+            "🌐 Multijugador",
+            "🕶 Realidad Virtual",
+            "📱 Aplicación Flutter",
+            "🔬 Realidad Mixta",
           ].map((item) => (
-            <Link
+            <div
               key={item}
-              href="/categories"
-              className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center transition hover:border-cyan-500 hover:bg-zinc-800"
+              className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center transition hover:border-green-500 hover:bg-zinc-800"
             >
               {item}
-            </Link>
+            </div>
           ))}
 
         </div>
 
       </section>
 
-      {/* BENEFICIOS */}
+      <section
+        id="tecnologias"
+        className="border-y border-zinc-800 bg-zinc-900"
+      >
 
-      <section className="border-y border-zinc-800 bg-zinc-900">
+        <div className="mx-auto max-w-7xl px-6 py-16">
 
-        <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 md:grid-cols-4">
+          <h2 className="mb-10 text-4xl font-bold">
+            Tecnologías Utilizadas
+          </h2>
 
-          <div>
-            <h3 className="text-4xl">🚚</h3>
-            <p className="mt-2 font-bold">
-              Envíos Nacionales
-            </p>
-            <p className="text-zinc-400">
-              Cobertura en todo México.
+          <div className="grid gap-6 md:grid-cols-4">
+
+            <div className="rounded-2xl bg-zinc-950 p-6">
+              <h3 className="text-2xl font-bold text-green-400">
+                Unity
+              </h3>
+
+              <p className="mt-2 text-zinc-400">
+                Desarrollo de videojuegos educativos.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-zinc-950 p-6">
+              <h3 className="text-2xl font-bold text-green-400">
+                Flutter
+              </h3>
+
+              <p className="mt-2 text-zinc-400">
+                Aplicación móvil multiplataforma.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-zinc-950 p-6">
+              <h3 className="text-2xl font-bold text-green-400">
+                Firebase
+              </h3>
+
+              <p className="mt-2 text-zinc-400">
+                Base de datos y servicios en la nube.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-zinc-950 p-6">
+              <h3 className="text-2xl font-bold text-green-400">
+                Photon PUN
+              </h3>
+
+              <p className="mt-2 text-zinc-400">
+                Funcionalidades multijugador.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-20">
+
+        <h2 className="mb-10 text-center text-4xl font-bold">
+          Impacto del Proyecto
+        </h2>
+
+        <p className="mx-auto mb-12 max-w-3xl text-center text-zinc-400">
+          LICENE integra múltiples tecnologías educativas
+          para ofrecer experiencias de aprendizaje inclusivas,
+          interactivas y accesibles.
+        </p>
+
+        <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
+
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">6+</h3>
+            <p className="mt-2 text-zinc-400">
+              Tecnologías Integradas
             </p>
           </div>
 
-          <div>
-            <h3 className="text-4xl">🛡️</h3>
-            <p className="mt-2 font-bold">
-              Compra Segura
-            </p>
-            <p className="text-zinc-400">
-              Protección de datos y pedidos.
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">5+</h3>
+            <p className="mt-2 text-zinc-400">
+              Experiencias Educativas
             </p>
           </div>
 
-          <div>
-            <h3 className="text-4xl">⚡</h3>
-            <p className="mt-2 font-bold">
-              Hardware Actual
-            </p>
-            <p className="text-zinc-400">
-              Componentes modernos y gaming.
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">VR</h3>
+            <p className="mt-2 text-zinc-400">
+              Realidad Virtual
             </p>
           </div>
 
-          <div>
-            <h3 className="text-4xl">🎧</h3>
-            <p className="mt-2 font-bold">
-              Soporte
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">AR</h3>
+            <p className="mt-2 text-zinc-400">
+              Realidad Mixta
             </p>
-            <p className="text-zinc-400">
-              Atención para tus compras.
+          </div>
+
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">APP</h3>
+            <p className="mt-2 text-zinc-400">
+              Aplicación Móvil
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+            <h3 className="text-4xl font-bold text-green-400">MP</h3>
+            <p className="mt-2 text-zinc-400">
+              Plataforma Multijugador
             </p>
           </div>
 
@@ -149,16 +222,14 @@ export default async function Home() {
 
       </section>
 
-      {/* PRODUCTOS */}
-
       <section className="mx-auto max-w-7xl px-6 py-20">
 
         <h2 className="text-4xl font-bold">
-          🔥 Productos Destacados
+          🚀 Módulos LICENE
         </h2>
 
         <p className="mt-3 text-zinc-400">
-          Productos recientemente agregados.
+          Módulos y experiencias educativas que forman parte del ecosistema LICENE.
         </p>
 
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -181,30 +252,113 @@ export default async function Home() {
 
       </section>
 
-      {/* CTA */}
+      <section
+        id="reconocimientos"
+        className="mx-auto max-w-7xl px-6 py-20"
+      >
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
+        <h2 className="text-4xl font-bold">
+          Reconocimientos y Logros
+        </h2>
 
-        <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 p-12">
+        <p className="mt-3 text-zinc-400">
+          Participaciones y reconocimientos obtenidos durante el desarrollo del proyecto.
+        </p>
 
-          <h2 className="text-4xl font-bold">
-            Configurador de PC
-          </h2>
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 
-          <p className="mt-4 text-zinc-400">
-            Estamos desarrollando una herramienta
-            para ayudarte a elegir componentes
-            compatibles y construir tu PC ideal.
-          </p>
+          <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
+            <div className="text-4xl">🏆</div>
+            <h3 className="mt-4 text-xl font-bold">
+              ExpoCiencias
+            </h3>
+          </div>
 
-          <Link
-            href="/build-pc"
-            className="mt-8 inline-block rounded-xl bg-cyan-500 px-8 py-4 font-bold text-black"
-          >
-            Próximamente
-          </Link>
+          <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
+            <div className="text-4xl">🥇</div>
+            <h3 className="mt-4 text-xl font-bold">
+              Infomatrix
+            </h3>
+          </div>
+
+          <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
+            <div className="text-4xl">🏅</div>
+            <h3 className="mt-4 text-xl font-bold">
+              Prototipos DGETI
+            </h3>
+          </div>
+
+          <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
+            <div className="text-4xl">🎓</div>
+            <h3 className="mt-4 text-xl font-bold">
+              Investigación Educativa
+            </h3>
+          </div>
 
         </div>
+
+      </section>
+
+      <section
+        id="descargas"
+        className="mx-auto max-w-7xl px-6 pb-20"
+      >
+
+     <div className="rounded-3xl border border-green-500/30 bg-gradient-to-r from-green-500/10 to-purple-500/10 p-12">
+
+     <h2 className="text-4xl font-bold">
+        Proyecto Educativo LICENE
+      </h2>
+
+      <p className="mt-4 text-zinc-400">
+        LICENE integra videojuegos educativos,
+        realidad virtual, realidad mixta,
+        aplicaciones móviles y plataformas
+        colaborativas para apoyar el aprendizaje inclusivo.
+      </p>
+
+      <div className="mt-8 flex flex-wrap gap-4">
+
+        <Link
+          href="/downloads"
+          className="
+            inline-block
+            rounded-xl
+            bg-gradient-to-r
+            from-green-500
+            to-purple-500
+            px-8
+            py-4
+            font-bold
+            text-white
+            transition
+            hover:opacity-90
+          "
+        >
+          Centro de Descargas
+        </Link>
+
+        <Link
+          href="/contact"
+          className="
+            inline-block
+            rounded-xl
+            border
+            border-green-500
+            px-8
+            py-4
+            font-bold
+            text-green-400
+            transition
+            hover:bg-green-500/10
+          "
+        >
+          Contacto
+        </Link>
+
+      </div>
+
+    </div>
 
       </section>
 

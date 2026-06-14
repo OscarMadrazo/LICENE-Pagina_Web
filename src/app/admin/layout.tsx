@@ -39,11 +39,23 @@ export default function AdminLayout({
 
   if (!authorized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        Verificando permisos...
+      <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
+
+        <h1 className="text-4xl font-bold text-cyan-400">
+          LICENE
+        </h1>
+
+        <p className="mt-4 text-zinc-400">
+          Verificando permisos administrativos...
+        </p>
+
       </div>
     );
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-zinc-950">
+      {children}
+    </div>
+  );
 }

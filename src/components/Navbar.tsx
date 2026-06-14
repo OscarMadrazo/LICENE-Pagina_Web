@@ -11,38 +11,15 @@ interface User {
 }
 
 export default function Navbar() {
-  const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState<User | null>(null);
-  const [search, setSearch] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function loadCart() {
-      try {
-        const cart = JSON.parse(
-          localStorage.getItem("cart") || "[]"
-        );
-
-        const totalItems = cart.reduce(
-          (
-            sum: number,
-            item: { quantity: number }
-          ) => sum + item.quantity,
-          0
-        );
-
-        setCartCount(totalItems);
-      } catch {
-        setCartCount(0);
-      }
-    }
-
     function loadUser() {
       try {
-        const savedUser =
-          localStorage.getItem("user");
+        const savedUser = localStorage.getItem("user");
 
         if (savedUser) {
           setUser(JSON.parse(savedUser));
@@ -65,7 +42,6 @@ export default function Navbar() {
       }
     }
 
-    loadCart();
     loadUser();
 
     document.addEventListener(
@@ -73,17 +49,10 @@ export default function Navbar() {
       handleClickOutside
     );
 
-    window.addEventListener("storage", loadCart);
-
     return () => {
       document.removeEventListener(
         "mousedown",
         handleClickOutside
-      );
-
-      window.removeEventListener(
-        "storage",
-        loadCart
       );
     };
   }, []);
@@ -96,19 +65,6 @@ export default function Navbar() {
     window.location.href = "/";
   }
 
-  function handleSearch(
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) {
-    if (e.key === "Enter") {
-      if (!search.trim()) return;
-
-      window.location.href =
-        `/search?q=${encodeURIComponent(
-          search
-        )}`;
-    }
-  }
-
   return (
     <nav
       className="
@@ -118,115 +74,102 @@ export default function Navbar() {
         backdrop-blur-md
       "
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4">
-
-        {/* LOGO */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
         <Link
           href="/"
           className="
+            whitespace-nowrap
             text-3xl
             font-extrabold
-            text-cyan-400
-            whitespace-nowrap
-            transition
-            hover:text-cyan-300
+            bg-gradient-to-r
+            from-green-400
+            to-purple-500
+            bg-clip-text
+            text-transparent
           "
         >
-          OK Dock
+          LICENE
         </Link>
-
-        {/* MENU */}
 
         <div className="hidden items-center gap-6 lg:flex">
 
           <Link
             href="/"
-            className="transition hover:text-cyan-400"
+            className="transition hover:text-green-400"
           >
             Inicio
           </Link>
 
           <Link
             href="/products"
-            className="transition hover:text-cyan-400"
+            className="transition hover:text-green-400"
           >
-            Productos
+            Ecosistema
           </Link>
 
           <Link
-            href="/categories"
-            className="transition hover:text-cyan-400"
+            href="#tecnologias"
+            className="transition hover:text-green-400"
           >
-            Categorías
+            Tecnologías
           </Link>
 
           <Link
-            href="/brands"
-            className="transition hover:text-cyan-400"
+            href="#reconocimientos"
+            className="transition hover:text-green-400"
           >
-            Marcas
+            Reconocimientos
           </Link>
 
           <Link
-            href="/offers"
-            className="transition hover:text-cyan-400"
+            href="/downloads"
+            className="transition hover:text-green-400"
           >
-            Ofertas
+            Descargas
           </Link>
 
           <Link
-            href="/build-pc"
-            className="transition hover:text-cyan-400"
+            href="/contact"
+            className="transition hover:text-green-400"
           >
-            Arma tu PC
+            Contacto
           </Link>
 
         </div>
 
-        {/* BUSCADOR */}
-
-        <div className="hidden flex-1 lg:flex">
-
-          <input
-            type="text"
-            value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-            onKeyDown={handleSearch}
-            placeholder="Buscar productos..."
-            className="
-              w-full
-              rounded-xl
-              border border-zinc-700
-              bg-zinc-900
-              px-4 py-2
-              outline-none
-              transition
-              focus:border-cyan-500
-            "
-          />
-
-        </div>
-
-        {/* DERECHA */}
-
-        <div className="ml-auto flex items-center gap-3">
+        <div className="flex items-center gap-3">
 
           <Link
-            href="/cart"
+            href="/products"
             className="
               rounded-xl
-              border border-cyan-500
+              bg-gradient-to-r
+              from-green-500
+              to-purple-500
               px-4 py-2
               font-semibold
-              text-cyan-400
+              text-white
               transition
-              hover:bg-cyan-500/10
+              hover:opacity-90
             "
           >
-            🛒 {cartCount}
+            🎮 Ecosistema
+          </Link>
+
+          <Link
+            href="/downloads"
+            className="
+              rounded-xl
+              border border-green-500
+              px-4 py-2
+              font-semibold
+              text-green-400
+              transition
+              hover:bg-green-500/10
+            "
+          >
+            📥 Descargas
           </Link>
 
           {user ? (
@@ -244,7 +187,7 @@ export default function Navbar() {
                   border border-zinc-700
                   px-4 py-2
                   transition
-                  hover:border-cyan-500
+                  hover:border-green-500
                 "
               >
                 👤
@@ -277,9 +220,6 @@ export default function Navbar() {
                       transition
                       hover:bg-zinc-800
                     "
-                    onClick={() =>
-                      setMenuOpen(false)
-                    }
                   >
                     Mi Perfil
                   </Link>
@@ -291,11 +231,8 @@ export default function Navbar() {
                       transition
                       hover:bg-zinc-800
                     "
-                    onClick={() =>
-                      setMenuOpen(false)
-                    }
                   >
-                    Mis Pedidos
+                    Mis Actividades
                   </Link>
 
                   {user.role === "ADMIN" && (
@@ -307,9 +244,6 @@ export default function Navbar() {
                         transition
                         hover:bg-zinc-800
                       "
-                      onClick={() =>
-                        setMenuOpen(false)
-                      }
                     >
                       Administración
                     </Link>
@@ -342,7 +276,7 @@ export default function Navbar() {
                   border border-zinc-700
                   px-4 py-2
                   transition
-                  hover:border-cyan-500
+                  hover:border-green-500
                 "
               >
                 Login
@@ -352,12 +286,14 @@ export default function Navbar() {
                 href="/register"
                 className="
                   rounded-xl
-                  bg-cyan-500
+                  bg-gradient-to-r
+                  from-green-500
+                  to-purple-500
                   px-4 py-2
                   font-bold
-                  text-black
+                  text-white
                   transition
-                  hover:bg-cyan-400
+                  hover:opacity-90
                 "
               >
                 Registro

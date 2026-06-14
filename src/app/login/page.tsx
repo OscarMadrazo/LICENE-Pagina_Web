@@ -40,7 +40,10 @@ export default function LoginPage() {
         JSON.stringify(data.user)
       );
 
-      alert("Bienvenido " + data.user.name);
+      alert(
+        "Bienvenido al sistema LICENE, " +
+          data.user.name
+      );
 
       window.location.href = "/";
     } catch (error) {
@@ -56,22 +59,32 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-zinc-950 flex items-center justify-center p-8">
-      <div className="w-full max-w-md rounded-2xl bg-zinc-900 p-8">
 
-        <h1 className="mb-6 text-center text-3xl font-bold text-white">
-          Iniciar Sesión
-        </h1>
+      <div className="w-full max-w-md rounded-3xl border border-cyan-500/20 bg-zinc-900 p-8">
 
-        <div className="space-y-4">
+        <div className="text-center">
+
+          <h1 className="text-5xl font-bold text-cyan-400">
+            LICENE
+          </h1>
+
+          <p className="mt-4 text-zinc-400">
+            Laboratorio Interactivo de Ciencias para
+            Estudiantes con Necesidades Específicas
+          </p>
+
+        </div>
+
+        <div className="mt-8 space-y-4">
 
           <input
             type="email"
-            placeholder="Correo"
+            placeholder="Correo electrónico"
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            className="w-full rounded-lg bg-zinc-800 p-3 text-white"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
           />
 
           <input
@@ -81,22 +94,29 @@ export default function LoginPage() {
             onChange={(e) =>
               setPassword(e.target.value)
             }
-            className="w-full rounded-lg bg-zinc-800 p-3 text-white"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 p-3 text-white"
           />
 
           <button
             onClick={login}
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-3 font-semibold hover:bg-blue-700"
+            className="w-full rounded-lg bg-cyan-600 py-3 font-semibold hover:bg-cyan-700"
           >
             {loading
-              ? "Ingresando..."
-              : "Ingresar"}
+              ? "Iniciando sesión..."
+              : "Ingresar al Sistema"}
           </button>
 
         </div>
 
+        <div className="mt-6 text-center text-sm text-zinc-500">
+          Plataforma educativa inclusiva basada en
+          videojuegos, realidad virtual, realidad mixta
+          y aplicaciones móviles.
+        </div>
+
       </div>
+
     </main>
   );
 }

@@ -7,10 +7,6 @@ interface User {
   name: string;
   email: string;
   phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zipCode?: string;
 }
 
 export default function ProfilePage() {
@@ -21,18 +17,6 @@ export default function ProfilePage() {
     useState("");
 
   const [phone, setPhone] =
-    useState("");
-
-  const [address, setAddress] =
-    useState("");
-
-  const [city, setCity] =
-    useState("");
-
-  const [stateValue, setStateValue] =
-    useState("");
-
-  const [zipCode, setZipCode] =
     useState("");
 
   useEffect(() => {
@@ -48,10 +32,6 @@ export default function ProfilePage() {
 
     setName(parsedUser.name || "");
     setPhone(parsedUser.phone || "");
-    setAddress(parsedUser.address || "");
-    setCity(parsedUser.city || "");
-    setStateValue(parsedUser.state || "");
-    setZipCode(parsedUser.zipCode || "");
   }, []);
 
   async function saveProfile() {
@@ -69,10 +49,6 @@ export default function ProfilePage() {
           userId: user.id,
           name,
           phone,
-          address,
-          city,
-          state: stateValue,
-          zipCode,
         }),
       }
     );
@@ -91,10 +67,6 @@ export default function ProfilePage() {
       ...user,
       name,
       phone,
-      address,
-      city,
-      state: stateValue,
-      zipCode,
     };
 
     localStorage.setItem(
@@ -111,9 +83,8 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-zinc-950 p-8 text-white">
-      <div className="mx-auto max-w-5xl">
 
-        {/* HEADER */}
+      <div className="mx-auto max-w-5xl">
 
         <div className="mb-8 rounded-3xl border border-cyan-500/20 bg-zinc-900 p-8">
 
@@ -121,9 +92,9 @@ export default function ProfilePage() {
 
             <div
               className="
-                flex h-20 w-20 items-center
+                flex h-24 w-24 items-center
                 justify-center rounded-full
-                bg-cyan-500 text-3xl
+                bg-cyan-500 text-4xl
                 font-bold text-black
               "
             >
@@ -140,25 +111,68 @@ export default function ProfilePage() {
                 {user?.email}
               </p>
 
+              <p className="mt-2 text-cyan-400">
+                Participante de LICENE
+              </p>
+
             </div>
 
           </div>
 
         </div>
 
-        {/* FORM */}
+        <div className="grid gap-6 md:grid-cols-3 mb-8">
+
+          <div className="rounded-2xl bg-zinc-900 p-6">
+
+            <h3 className="text-zinc-400">
+              Módulos Explorados
+            </h3>
+
+            <p className="mt-3 text-4xl font-bold text-cyan-400">
+              0
+            </p>
+
+          </div>
+
+          <div className="rounded-2xl bg-zinc-900 p-6">
+
+            <h3 className="text-zinc-400">
+              Actividades Registradas
+            </h3>
+
+            <p className="mt-3 text-4xl font-bold text-cyan-400">
+              0
+            </p>
+
+          </div>
+
+          <div className="rounded-2xl bg-zinc-900 p-6">
+
+            <h3 className="text-zinc-400">
+              Estado
+            </h3>
+
+            <p className="mt-3 text-2xl font-bold text-green-400">
+              Activo
+            </p>
+
+          </div>
+
+        </div>
 
         <div className="rounded-3xl bg-zinc-900 p-8">
 
           <h2 className="mb-8 text-2xl font-bold">
-            Información Personal
+            Información del Participante
           </h2>
 
           <div className="grid gap-6 md:grid-cols-2">
 
             <div>
+
               <label className="mb-2 block text-zinc-400">
-                Nombre
+                Nombre Completo
               </label>
 
               <input
@@ -174,11 +188,13 @@ export default function ProfilePage() {
                   focus:ring-cyan-500
                 "
               />
+
             </div>
 
             <div>
+
               <label className="mb-2 block text-zinc-400">
-                Correo
+                Correo Electrónico
               </label>
 
               <input
@@ -190,9 +206,11 @@ export default function ProfilePage() {
                   opacity-70
                 "
               />
+
             </div>
 
             <div>
+
               <label className="mb-2 block text-zinc-400">
                 Teléfono
               </label>
@@ -210,88 +228,7 @@ export default function ProfilePage() {
                   focus:ring-cyan-500
                 "
               />
-            </div>
 
-            <div>
-              <label className="mb-2 block text-zinc-400">
-                Código Postal
-              </label>
-
-              <input
-                value={zipCode}
-                onChange={(e) =>
-                  setZipCode(e.target.value)
-                }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="mb-2 block text-zinc-400">
-                Dirección
-              </label>
-
-              <input
-                value={address}
-                onChange={(e) =>
-                  setAddress(e.target.value)
-                }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-zinc-400">
-                Ciudad
-              </label>
-
-              <input
-                value={city}
-                onChange={(e) =>
-                  setCity(e.target.value)
-                }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-zinc-400">
-                Estado
-              </label>
-
-              <input
-                value={stateValue}
-                onChange={(e) =>
-                  setStateValue(
-                    e.target.value
-                  )
-                }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
-              />
             </div>
 
           </div>
@@ -305,12 +242,13 @@ export default function ProfilePage() {
               transition hover:bg-cyan-400
             "
           >
-            Guardar Cambios
+            Guardar Información
           </button>
 
         </div>
 
       </div>
+
     </main>
   );
 }

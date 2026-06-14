@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function CreateBrandForm() {
   const [name, setName] = useState("");
 
-  async function createBrand() {
+  async function createTechnology() {
     if (!name.trim()) return;
 
     await fetch("/api/brands/create", {
@@ -24,24 +24,28 @@ export default function CreateBrandForm() {
   return (
     <div className="mb-8 rounded-xl bg-zinc-900 p-6">
 
-      <h2 className="mb-4 text-xl font-bold">
-        Crear Marca
+      <h2 className="mb-2 text-2xl font-bold">
+        Crear Tecnología
       </h2>
+
+      <p className="mb-6 text-zinc-400">
+        Agrega una tecnología utilizada dentro del ecosistema LICENE.
+      </p>
 
       <div className="flex gap-4">
 
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nombre de la marca"
-          className="flex-1 rounded-lg bg-zinc-800 p-3 outline-none"
+          placeholder="Ejemplo: Unity, Flutter, Firebase..."
+          className="flex-1 rounded-lg bg-zinc-800 p-3 outline-none border border-zinc-700 focus:border-cyan-500"
         />
 
         <button
-          onClick={createBrand}
-          className="rounded-lg bg-blue-600 px-6 py-3 hover:bg-blue-700"
+          onClick={createTechnology}
+          className="rounded-lg bg-cyan-600 px-6 py-3 font-semibold hover:bg-cyan-700"
         >
-          Crear
+          Guardar Tecnología
         </button>
 
       </div>
