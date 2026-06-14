@@ -1,4 +1,3 @@
-import ProductCard from "@/components/ProductCard";
 import { prisma } from "@/lib/prisma";
 
 export default async function ProductsPage() {
@@ -12,35 +11,43 @@ export default async function ProductsPage() {
     <main className="min-h-screen bg-zinc-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-16">
 
-        <span className="rounded-full border border-cyan-500 px-4 py-2 text-sm text-cyan-400">
-          Ecosistema LICENE
-        </span>
-
-        <h1 className="mt-6 text-5xl font-bold">
+        <h1 className="text-5xl font-bold">
           Módulos Educativos
         </h1>
 
-        <p className="mt-4 max-w-3xl text-zinc-400">
-          Explora las experiencias educativas,
-          videojuegos, aplicaciones móviles,
-          plataformas colaborativas y tecnologías
-          desarrolladas dentro del ecosistema LICENE.
+        <p className="mt-4 text-green-400">
+          Productos encontrados: {products.length}
         </p>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12">
 
           {products.map((product) => (
-            <ProductCard
+            <div
               key={product.id}
-              product={{
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                stock: product.stock,
-                imageUrl: product.imageUrl ?? "",
-              }}
-            />
+              className="
+                mb-6
+                rounded-xl
+                border
+                border-white
+                p-4
+              "
+            >
+              <h2 className="text-2xl font-bold">
+                {product.name}
+              </h2>
+
+              <p className="mt-2 text-zinc-300">
+                {product.description}
+              </p>
+
+              <p className="mt-2 text-green-400">
+                SKU: {product.sku}
+              </p>
+
+              <p className="text-cyan-400">
+                ID: {product.id}
+              </p>
+            </div>
           ))}
 
         </div>
