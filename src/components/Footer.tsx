@@ -6,9 +6,9 @@ export default function Footer() {
       id="contacto"
       className="border-t border-zinc-800 bg-zinc-950 text-white"
     >
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-16">
 
-        <div className="grid gap-10 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
           {/* LICENE */}
 
@@ -18,7 +18,7 @@ export default function Footer() {
               className="
                 text-4xl
                 font-extrabold
-                bg-gradient-to-r
+                bg-linear-to-r
                 from-green-400
                 to-purple-500
                 bg-clip-text
@@ -156,7 +156,7 @@ export default function Footer() {
         <div
           className="
             my-10 h-px
-            bg-gradient-to-r
+            bg-linear-to-r
             from-green-500
             via-purple-500
             to-green-500
@@ -167,7 +167,7 @@ export default function Footer() {
 
         <div className="text-center">
 
-          <p className="text-zinc-500">
+          <p className="text-sm md:text-base text-zinc-500">
             © 2026 LICENE · Laboratorio Interactivo de Ciencias
             para Estudiantes con Necesidades Específicas
           </p>

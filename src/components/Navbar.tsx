@@ -13,6 +13,7 @@ interface User {
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -29,14 +30,10 @@ export default function Navbar() {
       }
     }
 
-    function handleClickOutside(
-      event: MouseEvent
-    ) {
+    function handleClickOutside(event: MouseEvent) {
       if (
         menuRef.current &&
-        !menuRef.current.contains(
-          event.target as Node
-        )
+        !menuRef.current.contains(event.target as Node)
       ) {
         setMenuOpen(false);
       }
@@ -59,9 +56,7 @@ export default function Navbar() {
 
   function logout() {
     localStorage.removeItem("user");
-
     alert("Sesión cerrada");
-
     window.location.href = "/";
   }
 
@@ -74,234 +69,244 @@ export default function Navbar() {
         backdrop-blur-md
       "
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-4">
 
-        <Link
-          href="/"
-          className="
-            whitespace-nowrap
-            text-3xl
-            font-extrabold
-            bg-gradient-to-r
-            from-green-400
-            to-purple-500
-            bg-clip-text
-            text-transparent
-          "
-        >
-          LICENE
-        </Link>
-
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="flex items-center justify-between">
 
           <Link
             href="/"
-            className="transition hover:text-green-400"
-          >
-            Inicio
-          </Link>
-
-          <Link
-            href="/products"
-            className="transition hover:text-green-400"
-          >
-            Ecosistema
-          </Link>
-
-          <Link
-            href="#tecnologias"
-            className="transition hover:text-green-400"
-          >
-            Tecnologías
-          </Link>
-
-          <Link
-            href="#reconocimientos"
-            className="transition hover:text-green-400"
-          >
-            Reconocimientos
-          </Link>
-
-          <Link
-            href="/downloads"
-            className="transition hover:text-green-400"
-          >
-            Descargas
-          </Link>
-
-          <Link
-            href="/contact"
-            className="transition hover:text-green-400"
-          >
-            Contacto
-          </Link>
-
-        </div>
-
-        <div className="flex items-center gap-3">
-
-          <Link
-            href="/products"
             className="
-              rounded-xl
-              bg-gradient-to-r
-              from-green-500
+              text-2xl md:text-3xl
+              font-extrabold
+              bg-linear-to-r
+              from-green-400
               to-purple-500
-              px-4 py-2
-              font-semibold
-              text-white
-              transition
-              hover:opacity-90
+              bg-clip-text
+              text-transparent
             "
           >
-            🎮 Ecosistema
+            LICENE
           </Link>
 
-          <Link
-            href="/downloads"
-            className="
-              rounded-xl
-              border border-green-500
-              px-4 py-2
-              font-semibold
-              text-green-400
-              transition
-              hover:bg-green-500/10
-            "
-          >
-            📥 Descargas
-          </Link>
+          {/* Menú Desktop */}
+          <div className="hidden lg:flex items-center gap-6">
 
-          {user ? (
-            <div
-              className="relative"
-              ref={menuRef}
+            <Link href="/" className="hover:text-green-400">
+              Inicio
+            </Link>
+
+            <Link href="/products" className="hover:text-green-400">
+              Ecosistema
+            </Link>
+
+            <Link href="#tecnologias" className="hover:text-green-400">
+              Tecnologías
+            </Link>
+
+            <Link href="#reconocimientos" className="hover:text-green-400">
+              Reconocimientos
+            </Link>
+
+            <Link href="/downloads" className="hover:text-green-400">
+              Descargas
+            </Link>
+
+            <Link href="/contact" className="hover:text-green-400">
+              Contacto
+            </Link>
+
+          </div>
+
+          {/* Botones Desktop */}
+          <div className="hidden lg:flex items-center gap-3">
+
+            <Link
+              href="/products"
+              className="
+                rounded-xl
+                bg-linear-to-r
+                from-green-500
+                to-purple-500
+                px-4 py-2
+                font-semibold
+                text-white
+              "
             >
-              <button
-                onClick={() =>
-                  setMenuOpen(!menuOpen)
-                }
-                className="
-                  flex items-center gap-2
-                  rounded-xl
-                  border border-zinc-700
-                  px-4 py-2
-                  transition
-                  hover:border-green-500
-                "
+              🎮 Ecosistema
+            </Link>
+
+            {user ? (
+              <div
+                className="relative"
+                ref={menuRef}
               >
-                👤
-
-                <span className="hidden md:block">
-                  {user.name}
-                </span>
-
-                <span className="text-xs">
-                  ▼
-                </span>
-              </button>
-
-              {menuOpen && (
-                <div
+                <button
+                  onClick={() =>
+                    setMenuOpen(!menuOpen)
+                  }
                   className="
-                    absolute right-0 mt-2
-                    w-56
-                    overflow-hidden
                     rounded-xl
-                    border border-zinc-800
-                    bg-zinc-900
-                    shadow-2xl
+                    border border-zinc-700
+                    px-4 py-2
                   "
                 >
-                  <Link
-                    href="/profile"
+                  👤 {user.name}
+                </button>
+
+                {menuOpen && (
+                  <div
                     className="
-                      block px-4 py-3
-                      transition
-                      hover:bg-zinc-800
+                      absolute right-0 mt-2
+                      w-56
+                      rounded-xl
+                      border border-zinc-800
+                      bg-zinc-900
                     "
                   >
-                    Mi Perfil
-                  </Link>
-
-                  <Link
-                    href="/my-orders"
-                    className="
-                      block px-4 py-3
-                      transition
-                      hover:bg-zinc-800
-                    "
-                  >
-                    Mis Actividades
-                  </Link>
-
-                  {user.role === "ADMIN" && (
                     <Link
-                      href="/admin"
+                      href="/profile"
+                      className="block px-4 py-3 hover:bg-zinc-800"
+                    >
+                      Mi Perfil
+                    </Link>
+
+                    <Link
+                      href="/my-orders"
+                      className="block px-4 py-3 hover:bg-zinc-800"
+                    >
+                      Mis Actividades
+                    </Link>
+
+                    {user.role === "ADMIN" && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-3 text-purple-400 hover:bg-zinc-800"
+                      >
+                        Administración
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={logout}
                       className="
-                        block px-4 py-3
-                        text-purple-400
-                        transition
+                        w-full
+                        px-4 py-3
+                        text-left
+                        text-red-400
                         hover:bg-zinc-800
                       "
                     >
-                      Administración
-                    </Link>
-                  )}
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="
+                    rounded-xl
+                    border border-zinc-700
+                    px-4 py-2
+                  "
+                >
+                  Login
+                </Link>
 
-                  <div className="border-t border-zinc-800" />
+                <Link
+                  href="/register"
+                  className="
+                    rounded-xl
+                    bg-linear-to-r
+                    from-green-500
+                    to-purple-500
+                    px-4 py-2
+                    font-bold
+                    text-white
+                  "
+                >
+                  Registro
+                </Link>
+              </>
+            )}
 
-                  <button
-                    onClick={logout}
-                    className="
-                      w-full
-                      px-4 py-3
-                      text-left
-                      text-red-400
-                      transition
-                      hover:bg-zinc-800
-                    "
-                  >
-                    Cerrar Sesión
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="
-                  rounded-xl
-                  border border-zinc-700
-                  px-4 py-2
-                  transition
-                  hover:border-green-500
-                "
-              >
-                Login
-              </Link>
+          </div>
 
-              <Link
-                href="/register"
-                className="
-                  rounded-xl
-                  bg-gradient-to-r
-                  from-green-500
-                  to-purple-500
-                  px-4 py-2
-                  font-bold
-                  text-white
-                  transition
-                  hover:opacity-90
-                "
-              >
-                Registro
-              </Link>
-            </>
-          )}
+          {/* Botón móvil */}
+          <button
+            onClick={() =>
+              setMobileMenu(!mobileMenu)
+            }
+            className="
+              lg:hidden
+              text-3xl
+            "
+          >
+            ☰
+          </button>
 
         </div>
+
+        {/* Menú móvil */}
+        {mobileMenu && (
+          <div
+            className="
+              lg:hidden
+              mt-4
+              flex
+              flex-col
+              gap-3
+              rounded-2xl
+              border
+              border-zinc-800
+              bg-zinc-900
+              p-4
+            "
+          >
+            <Link href="/">Inicio</Link>
+            <Link href="/products">Ecosistema</Link>
+            <Link href="/downloads">Descargas</Link>
+            <Link href="/contact">Contacto</Link>
+
+            <div className="border-t border-zinc-800 pt-3" />
+
+            {user ? (
+              <>
+                <Link href="/profile">
+                  Mi Perfil
+                </Link>
+
+                <Link href="/my-orders">
+                  Mis Actividades
+                </Link>
+
+                {user.role === "ADMIN" && (
+                  <Link href="/admin">
+                    Administración
+                  </Link>
+                )}
+
+                <button
+                  onClick={logout}
+                  className="text-left text-red-400"
+                >
+                  Cerrar Sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  Login
+                </Link>
+
+                <Link href="/register">
+                  Registro
+                </Link>
+              </>
+            )}
+          </div>
+        )}
 
       </div>
     </nav>
