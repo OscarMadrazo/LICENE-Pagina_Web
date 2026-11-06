@@ -65,7 +65,8 @@ export default function EditProductForm({
     });
 
     if (!response.ok) {
-      alert("Error al actualizar módulo");
+      const data = await response.json().catch(() => null);
+      alert(data?.message || "Error al actualizar módulo");
       return;
     }
 

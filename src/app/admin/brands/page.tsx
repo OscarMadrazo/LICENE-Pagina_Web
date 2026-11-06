@@ -1,7 +1,10 @@
+import { requireAdminPage } from "@/lib/dal";
 import CreateBrandForm from "@/components/CreateBrandForm";
 import { prisma } from "@/lib/prisma";
 
 export default async function TechnologiesPage() {
+  await requireAdminPage();
+
   const technologies = await prisma.brand.findMany({
     orderBy: {
       name: "asc",

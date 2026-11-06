@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/dal";
 import { prisma } from "@/lib/prisma";
 import CreateProductForm from "@/components/CreateProductForm";
 import DeleteProductButton from "@/components/DeleteProductButton";
@@ -8,6 +9,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function ModulesPage() {
+  await requireAdminPage();
+
   const modules = await prisma.product.findMany({
     include: {
       brand: true,
@@ -98,9 +101,18 @@ export default async function ModulesPage() {
                       {module.name}
                     </h2>
 
-                    <span className="rounded-full bg-green-500/20 px-3 py-1 text-sm text-green-400">
-                      Activo
-                    </span>
+                    {module.isActive ? (
+                      <span className="rounded-full bg-green-500/20 px-3 py-1 text-sm text-green-400">
+                        Activo
+                      </span>
+                    ) : (
+                      <span
+                        className="rounded-full bg-zinc-500/20 px-3 py-1 text-sm text-zinc-400"
+                        title="Tiene pedidos registrados, por eso se ocultó de la tienda en lugar de borrarse"
+                      >
+                        Inactivo
+                      </span>
+                    )}
 
                   </div>
 

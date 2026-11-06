@@ -68,7 +68,8 @@ export default function CreateProductForm({
       );
 
       if (!response.ok) {
-        alert("Error al guardar módulo");
+        const data = await response.json().catch(() => null);
+        alert(data?.message || "Error al guardar módulo");
         return;
       }
 

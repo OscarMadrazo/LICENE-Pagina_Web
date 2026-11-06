@@ -1,34 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/dal";
+import { parseProductInput } from "@/lib/product-input";
+import { readJson } from "@/lib/validation";
 
 export async function POST(
   req: NextRequest
 ) {
+  const auth = await requireAdmin();
+  if (auth.error) return auth.error;
+
   try {
-    const body = await req.json();
+    const input = parseProductInput(await readJson(req));
+
+    if (!input.data) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: input.error,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const product =
       await prisma.product.create({
-        data: {
-          name: body.name,
-          description: body.description,
-          sku: body.sku,
-
-          imageUrl:
-            body.imageUrl || null,
-
-          price: Number(
-            body.price
-          ),
-
-          stock: Number(
-            body.stock
-          ),
-
-          brandId: body.brandId,
-          categoryId:
-            body.categoryId,
-        },
+        data: input.data,
       });
 
     return NextResponse.json({
@@ -36,12 +36,27 @@ export async function POST(
       product,
     });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Ya existe un producto con ese SKU",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        error: String(error),
+        message: "Error al crear el producto",
       },
       {
         status: 500,

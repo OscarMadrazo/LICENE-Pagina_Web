@@ -1,84 +1,114 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  fetchSessionUser,
+  saveCachedUser,
+  type ClientUser,
+} from "@/lib/client-session";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-}
+const ADDRESS_FIELDS = [
+  { key: "phone", label: "Teléfono", type: "tel" },
+  { key: "address", label: "Dirección", type: "text" },
+  { key: "city", label: "Ciudad", type: "text" },
+  { key: "state", label: "Estado", type: "text" },
+  { key: "zipCode", label: "Código Postal", type: "text" },
+] as const;
+
+type AddressKey = (typeof ADDRESS_FIELDS)[number]["key"];
+
+const inputClassName = `
+  w-full rounded-xl
+  bg-zinc-800 p-3
+  outline-none
+  focus:ring-2
+  focus:ring-cyan-500
+`;
 
 export default function ProfilePage() {
   const [user, setUser] =
-    useState<User | null>(null);
+    useState<ClientUser | null>(null);
 
   const [name, setName] =
     useState("");
 
-  const [phone, setPhone] =
-    useState("");
+  const [fields, setFields] = useState<
+    Record<AddressKey, string>
+  >({
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+  });
+
+  const [saving, setSaving] =
+    useState(false);
 
   useEffect(() => {
-    const savedUser =
-      localStorage.getItem("user");
+    fetchSessionUser().then((sessionUser) => {
+      if (!sessionUser) {
+        window.location.href = "/login";
+        return;
+      }
 
-    if (!savedUser) return;
-
-    const parsedUser =
-      JSON.parse(savedUser);
-
-    setUser(parsedUser);
-
-    setName(parsedUser.name || "");
-    setPhone(parsedUser.phone || "");
+      setUser(sessionUser);
+      setName(sessionUser.name || "");
+      setFields({
+        phone: sessionUser.phone || "",
+        address: sessionUser.address || "",
+        city: sessionUser.city || "",
+        state: sessionUser.state || "",
+        zipCode: sessionUser.zipCode || "",
+      });
+    });
   }, []);
 
   async function saveProfile() {
     if (!user) return;
 
-    const response = await fetch(
-      "/api/profile/update",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          name,
-          phone,
-        }),
-      }
-    );
+    try {
+      setSaving(true);
 
-    const data =
-      await response.json();
-
-    if (!data.success) {
-      alert(
-        "Error al guardar perfil"
+      const response = await fetch(
+        "/api/profile/update",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            ...fields,
+          }),
+        }
       );
-      return;
+
+      const data =
+        await response.json();
+
+      if (!data.success) {
+        alert(
+          data.message ||
+            "Error al guardar perfil"
+        );
+        return;
+      }
+
+      saveCachedUser(data.user);
+      setUser(data.user);
+
+      alert(
+        "Perfil actualizado correctamente"
+      );
+    } catch (error) {
+      console.error(error);
+
+      alert("Error al guardar perfil");
+    } finally {
+      setSaving(false);
     }
-
-    const updatedUser = {
-      ...user,
-      name,
-      phone,
-    };
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(updatedUser)
-    );
-
-    setUser(updatedUser);
-
-    alert(
-      "Perfil actualizado correctamente"
-    );
   }
 
   return (
@@ -163,41 +193,49 @@ export default function ProfilePage() {
 
         <div className="rounded-3xl bg-zinc-900 p-8">
 
-          <h2 className="mb-8 text-2xl font-bold">
+          <h2 className="mb-2 text-2xl font-bold">
             Información del Participante
           </h2>
+
+          <p className="mb-8 text-zinc-400">
+            Los datos de contacto y dirección son necesarios para
+            solicitar módulos.
+          </p>
 
           <div className="grid gap-6 md:grid-cols-2">
 
             <div>
 
-              <label className="mb-2 block text-zinc-400">
+              <label
+                htmlFor="profile-name"
+                className="mb-2 block text-zinc-400"
+              >
                 Nombre Completo
               </label>
 
               <input
+                id="profile-name"
                 value={name}
+                maxLength={100}
                 onChange={(e) =>
                   setName(e.target.value)
                 }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
+                className={inputClassName}
               />
 
             </div>
 
             <div>
 
-              <label className="mb-2 block text-zinc-400">
+              <label
+                htmlFor="profile-email"
+                className="mb-2 block text-zinc-400"
+              >
                 Correo Electrónico
               </label>
 
               <input
+                id="profile-email"
                 value={user?.email || ""}
                 disabled
                 className="
@@ -209,40 +247,48 @@ export default function ProfilePage() {
 
             </div>
 
-            <div>
+            {ADDRESS_FIELDS.map((field) => (
+              <div key={field.key}>
 
-              <label className="mb-2 block text-zinc-400">
-                Teléfono
-              </label>
+                <label
+                  htmlFor={`profile-${field.key}`}
+                  className="mb-2 block text-zinc-400"
+                >
+                  {field.label}
+                </label>
 
-              <input
-                value={phone}
-                onChange={(e) =>
-                  setPhone(e.target.value)
-                }
-                className="
-                  w-full rounded-xl
-                  bg-zinc-800 p-3
-                  outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                "
-              />
+                <input
+                  id={`profile-${field.key}`}
+                  type={field.type}
+                  value={fields[field.key]}
+                  onChange={(e) =>
+                    setFields((current) => ({
+                      ...current,
+                      [field.key]: e.target.value,
+                    }))
+                  }
+                  className={inputClassName}
+                />
 
-            </div>
+              </div>
+            ))}
 
           </div>
 
           <button
             onClick={saveProfile}
+            disabled={saving || !user}
             className="
               mt-8 w-full rounded-xl
               bg-cyan-500 py-4
               font-bold text-black
               transition hover:bg-cyan-400
+              disabled:opacity-60
             "
           >
-            Guardar Información
+            {saving
+              ? "Guardando..."
+              : "Guardar Información"}
           </button>
 
         </div>

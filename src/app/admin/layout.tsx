@@ -1,57 +1,15 @@
-"use client";
+import { requireAdminPage } from "@/lib/dal";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-interface User {
-  role: string;
-}
-
-export default function AdminLayout({
+// La verificación se hace en el servidor: si el usuario no es administrador,
+// se le redirige antes de que se genere cualquier dato del panel.
+// Cada página del panel también llama a requireAdminPage(), porque un layout
+// no se vuelve a ejecutar al navegar entre páginas que lo comparten.
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-
-  const [authorized, setAuthorized] =
-    useState(false);
-
-  useEffect(() => {
-    const savedUser =
-      localStorage.getItem("user");
-
-    if (!savedUser) {
-      router.push("/");
-      return;
-    }
-
-    const user: User =
-      JSON.parse(savedUser);
-
-    if (user.role !== "ADMIN") {
-      router.push("/");
-      return;
-    }
-
-    setAuthorized(true);
-  }, [router]);
-
-  if (!authorized) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
-
-        <h1 className="text-4xl font-bold text-cyan-400">
-          LICENE
-        </h1>
-
-        <p className="mt-4 text-zinc-400">
-          Verificando permisos administrativos...
-        </p>
-
-      </div>
-    );
-  }
+  await requireAdminPage();
 
   return (
     <div className="min-h-screen bg-zinc-950">
