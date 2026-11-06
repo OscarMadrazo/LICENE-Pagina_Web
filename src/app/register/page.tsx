@@ -91,11 +91,17 @@ export default function RegisterPage() {
         return;
       }
 
+      // El registro ya inicia la sesión en el servidor.
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
       alert(
         "Cuenta creada correctamente"
       );
 
-      window.location.href = "/login";
+      window.location.href = "/profile";
     } catch (error) {
       console.error(error);
 

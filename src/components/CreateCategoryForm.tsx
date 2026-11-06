@@ -8,7 +8,7 @@ export default function CreateCategoryForm() {
   async function createExperienceType() {
     if (!name.trim()) return;
 
-    await fetch("/api/categories/create", {
+    const response = await fetch("/api/categories/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,6 +17,12 @@ export default function CreateCategoryForm() {
         name,
       }),
     });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      alert(data?.message || "Error al crear la categoría");
+      return;
+    }
 
     window.location.reload();
   }

@@ -15,6 +15,7 @@ export default async function ModulePage({
   const liceneModule = await prisma.product.findFirst({
     where: {
       id,
+      isActive: true,
     },
     include: {
       brand: true,

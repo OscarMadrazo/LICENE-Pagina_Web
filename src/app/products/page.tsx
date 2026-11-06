@@ -6,6 +6,9 @@ export const revalidate = 0;
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
+    where: {
+      isActive: true,
+    },
     orderBy: {
       createdAt: "desc",
     },

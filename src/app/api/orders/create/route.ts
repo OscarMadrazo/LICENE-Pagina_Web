@@ -1,48 +1,106 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/dal";
+import { readJson } from "@/lib/validation";
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
+const MAX_ITEMS = 50;
+const MAX_QUANTITY = 99;
+
+function errorResponse(message: string, status = 400) {
+  return NextResponse.json(
+    {
+      success: false,
+      message,
+    },
+    {
+      status,
+    }
+  );
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await requireUser();
+  if (auth.error) return auth.error;
+
+  const user = auth.user;
+
   try {
-    const body = await req.json();
+    const body = await readJson(req);
+    const rawItems = body?.items;
 
-    const items: CartItem[] = body.items;
-    const userId: string | undefined =
-      body.userId;
+    if (!Array.isArray(rawItems) || rawItems.length === 0) {
+      return errorResponse("Carrito vacío");
+    }
 
-    if (!items || items.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Carrito vacío",
+    if (rawItems.length > MAX_ITEMS) {
+      return errorResponse("El carrito tiene demasiados productos");
+    }
+
+    // Agrupa por producto y valida cantidades. Del cliente solo se acepta
+    // el id y la cantidad: el precio siempre se toma de la base de datos.
+    const quantities = new Map<string, number>();
+
+    for (const item of rawItems) {
+      const id = item?.id;
+      const quantity = Number(item?.quantity);
+
+      if (
+        typeof id !== "string" ||
+        !Number.isInteger(quantity) ||
+        quantity < 1 ||
+        quantity > MAX_QUANTITY
+      ) {
+        return errorResponse("Hay un producto con datos no válidos en el carrito");
+      }
+
+      quantities.set(id, (quantities.get(id) ?? 0) + quantity);
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          in: [...quantities.keys()],
         },
-        {
-          status: 400,
-        }
+        isActive: true,
+      },
+      select: {
+        id: true,
+        price: true,
+      },
+    });
+
+    if (products.length !== quantities.size) {
+      return errorResponse(
+        "Algún producto del carrito ya no está disponible. Actualiza tu carrito."
       );
     }
 
+    const missingFields = [
+      ["Teléfono", user.phone],
+      ["Dirección", user.address],
+      ["Ciudad", user.city],
+      ["Estado", user.state],
+      ["Código Postal", user.zipCode],
+    ]
+      .filter(([, value]) => !value)
+      .map(([label]) => label);
+
+    if (missingFields.length > 0) {
+      return errorResponse(
+        `Completa tu perfil antes de comprar. Faltan: ${missingFields.join(", ")}`
+      );
+    }
+
+    const items = products.map((product) => ({
+      productId: product.id,
+      price: product.price,
+      quantity: quantities.get(product.id)!,
+    }));
+
     const total = items.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
-
-    let user = null;
-
-    if (userId) {
-      user = await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-    }
 
     const order = await prisma.order.create({
       data: {
@@ -50,35 +108,26 @@ export async function POST(req: NextRequest) {
 
         status: "Pendiente",
 
-        ...(userId
-          ? {
-              user: {
-                connect: {
-                  id: userId,
-                },
-              },
-            }
-          : {}),
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
 
-        customerName: user?.name,
-        phone: user?.phone,
-        address: user?.address,
-        city: user?.city,
-        state: user?.state,
-        zipCode: user?.zipCode,
+        customerName: user.name,
+        phone: user.phone,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        zipCode: user.zipCode,
 
         items: {
-          create: items.map((item) => ({
-            quantity: item.quantity,
-            price: item.price,
-            productId: item.id,
-          })),
+          create: items,
         },
       },
 
       include: {
         items: true,
-        user: true,
       },
     });
 
@@ -89,14 +138,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: String(error),
-      },
-      {
-        status: 500,
-      }
-    );
+    return errorResponse("Error al crear el pedido", 500);
   }
 }

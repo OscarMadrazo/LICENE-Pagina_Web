@@ -1,14 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { createSession } from "@/lib/session";
+import { publicUserSelect } from "@/lib/dal";
+import {
+  cleanString,
+  normalizeEmail,
+  readJson,
+} from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await readJson(req);
 
-    const { name, email, password } = body;
+    const name = cleanString(body?.name, 100);
+    const email = normalizeEmail(body?.email);
+    const password = body?.password;
 
-    if (!name || !email || !password) {
+    if (!body?.name || !body?.email || !password) {
       return NextResponse.json(
         {
           success: false,
@@ -21,12 +30,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (name.trim().length < 3) {
+    if (!name || name.length < 3) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "El nombre debe tener al menos 3 caracteres",
+            "El nombre debe tener entre 3 y 100 caracteres",
         },
         {
           status: 400,
@@ -34,10 +43,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const emailRegex =
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(email)) {
+    if (!email) {
       return NextResponse.json(
         {
           success: false,
@@ -50,12 +56,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (password.length < 8) {
+    // bcrypt solo usa los primeros 72 bytes de la contraseña.
+    if (
+      typeof password !== "string" ||
+      password.length < 8 ||
+      password.length > 72
+    ) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "La contraseña debe tener al menos 8 caracteres",
+            "La contraseña debe tener entre 8 y 72 caracteres",
         },
         {
           status: 400,
@@ -67,6 +78,9 @@ export async function POST(req: NextRequest) {
       await prisma.user.findUnique({
         where: {
           email,
+        },
+        select: {
+          id: true,
         },
       });
 
@@ -86,6 +100,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword =
       await bcrypt.hash(password, 10);
 
+    // El rol nunca se toma del cliente: todo registro nuevo es USER.
     const user =
       await prisma.user.create({
         data: {
@@ -93,15 +108,14 @@ export async function POST(req: NextRequest) {
           email,
           password: hashedPassword,
         },
+        select: publicUserSelect,
       });
+
+    await createSession(user.id);
 
     return NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
+      user,
     });
   } catch (error) {
     console.error(error);

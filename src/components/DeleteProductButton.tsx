@@ -12,7 +12,7 @@ export default function DeleteProductButton({
 
     if (!confirmDelete) return;
 
-    await fetch("/api/products/delete", {
+    const response = await fetch("/api/products/delete", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -21,6 +21,19 @@ export default function DeleteProductButton({
         id: productId,
       }),
     });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.message || "Error al eliminar el producto");
+      return;
+    }
+
+    if (data.deactivated) {
+      alert(
+        "Este producto tiene pedidos registrados, así que se ocultó de la tienda en lugar de borrarse."
+      );
+    }
 
     window.location.reload();
   }

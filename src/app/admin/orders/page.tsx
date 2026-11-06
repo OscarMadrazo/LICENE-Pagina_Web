@@ -1,9 +1,18 @@
+import { requireAdminPage } from "@/lib/dal";
 import { prisma } from "@/lib/prisma";
 
 export default async function ActivityPage() {
+  await requireAdminPage();
+
   const records = await prisma.order.findMany({
     include: {
-      user: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+        },
+      },
       items: {
         include: {
           product: true,

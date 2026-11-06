@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import {
+  fetchSessionUser,
+  getCachedUser,
+  logout as endSession,
+  type ClientUser,
+} from "@/lib/client-session";
 
 export default function Navbar() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ClientUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
 
@@ -19,15 +18,9 @@ export default function Navbar() {
 
   useEffect(() => {
     function loadUser() {
-      try {
-        const savedUser = localStorage.getItem("user");
-
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
-        }
-      } catch {
-        setUser(null);
-      }
+      // Muestra la copia local al instante y luego confirma con el servidor.
+      setUser(getCachedUser());
+      fetchSessionUser().then(setUser);
     }
 
     function handleClickOutside(event: MouseEvent) {
@@ -54,8 +47,8 @@ export default function Navbar() {
     };
   }, []);
 
-  function logout() {
-    localStorage.removeItem("user");
+  async function logout() {
+    await endSession();
     alert("Sesión cerrada");
     window.location.href = "/";
   }

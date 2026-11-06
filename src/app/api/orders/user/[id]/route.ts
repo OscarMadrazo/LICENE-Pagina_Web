@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isAdmin, requireUser } from "@/lib/dal";
 
 export async function GET(
   request: Request,
@@ -7,7 +8,23 @@ export async function GET(
     params: Promise<{ id: string }>;
   }
 ) {
+  const auth = await requireUser();
+  if (auth.error) return auth.error;
+
   const { id } = await context.params;
+
+  // Cada usuario solo puede ver sus propios pedidos; un administrador, los de cualquiera.
+  if (id !== auth.user.id && !isAdmin(auth.user)) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "No autorizado",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
 
   const orders = await prisma.order.findMany({
     where: {

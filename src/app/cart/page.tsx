@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { fetchSessionUser } from "@/lib/client-session";
 
 interface CartItem {
   id: string;
@@ -89,10 +90,9 @@ export default function CartPage() {
     }
 
     try {
-      const savedUser =
-        localStorage.getItem("user");
+      const user = await fetchSessionUser();
 
-      if (!savedUser) {
+      if (!user) {
         alert(
           "Debes iniciar sesión para realizar una compra"
         );
@@ -100,8 +100,6 @@ export default function CartPage() {
         window.location.href = "/login";
         return;
       }
-
-      const user = JSON.parse(savedUser);
 
       const missingFields = [];
 
@@ -146,9 +144,12 @@ export default function CartPage() {
             "Content-Type":
               "application/json",
           },
+          // El servidor toma el usuario de la sesión y los precios de la base de datos.
           body: JSON.stringify({
-            items: cart,
-            userId: user.id,
+            items: cart.map((item) => ({
+              id: item.id,
+              quantity: item.quantity,
+            })),
           }),
         }
       );
@@ -158,7 +159,8 @@ export default function CartPage() {
 
       if (!data.success) {
         alert(
-          "Error al crear pedido"
+          data.message ||
+            "Error al crear pedido"
         );
         return;
       }

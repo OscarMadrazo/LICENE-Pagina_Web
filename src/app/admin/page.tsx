@@ -1,7 +1,10 @@
+import { requireAdminPage } from "@/lib/dal";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminPage() {
+  await requireAdminPage();
+
   const [
     productsCount,
     usersCount,

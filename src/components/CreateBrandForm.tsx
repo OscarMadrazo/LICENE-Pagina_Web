@@ -8,7 +8,7 @@ export default function CreateBrandForm() {
   async function createTechnology() {
     if (!name.trim()) return;
 
-    await fetch("/api/brands/create", {
+    const response = await fetch("/api/brands/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,6 +17,12 @@ export default function CreateBrandForm() {
         name,
       }),
     });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      alert(data?.message || "Error al crear la tecnología");
+      return;
+    }
 
     window.location.reload();
   }

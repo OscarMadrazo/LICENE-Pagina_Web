@@ -1,14 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
+import { createSession } from "@/lib/session";
+import { publicUserSelect } from "@/lib/dal";
+import { normalizeEmail, readJson } from "@/lib/validation";
+
+// Cuando el correo no existe se compara contra este hash, para que la respuesta
+// tarde lo mismo y no revele qué correos están registrados.
+const DUMMY_HASH = bcrypt.hashSync("licene-usuario-inexistente", 10);
+
+function invalidCredentials() {
+  return NextResponse.json(
+    {
+      success: false,
+      message: "Correo o contraseña incorrectos",
+    },
+    {
+      status: 401,
+    }
+  );
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await readJson(req);
+    const email = normalizeEmail(body?.email);
+    const password = body?.password;
 
-    const { email, password } = body;
-
-    if (!email || !password) {
+    if (!email || typeof password !== "string" || !password) {
       return NextResponse.json(
         {
           success: false,
@@ -24,45 +43,28 @@ export async function POST(req: NextRequest) {
       where: {
         email,
       },
+      select: {
+        ...publicUserSelect,
+        password: true,
+      },
     });
 
     if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Usuario no encontrado",
-        },
-        {
-          status: 400,
-        }
-      );
+      await bcrypt.compare(password, DUMMY_HASH);
+      return invalidCredentials();
     }
 
-    const validPassword = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const { password: passwordHash, ...publicUser } = user;
 
-    if (!validPassword) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Contraseña incorrecta",
-        },
-        {
-          status: 400,
-        }
-      );
+    if (!(await bcrypt.compare(password, passwordHash))) {
+      return invalidCredentials();
     }
+
+    await createSession(user.id);
 
     return NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: publicUser,
     });
   } catch (error) {
     console.error(error);

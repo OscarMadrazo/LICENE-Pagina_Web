@@ -1,7 +1,10 @@
+import { requireAdminPage } from "@/lib/dal";
 import { prisma } from "@/lib/prisma";
 import CreateCategoryForm from "@/components/CreateCategoryForm";
 
 export default async function ExperienceTypesPage() {
+  await requireAdminPage();
+
   const types = await prisma.category.findMany({
     orderBy: {
       name: "asc",
