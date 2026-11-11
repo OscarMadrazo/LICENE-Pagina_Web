@@ -8,15 +8,21 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Home() {
-  const products = await prisma.product.findMany({
-    where: {
-      isActive: true,
-    },
-    take: 8,
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  // Si la base de datos no responde, la portada se muestra igual (sin productos) en lugar de romperse.
+  const products = await prisma.product
+    .findMany({
+      where: {
+        isActive: true,
+      },
+      take: 8,
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+    .catch((error: unknown) => {
+      console.error("Portada: no se pudieron cargar los productos", error);
+      return [];
+    });
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
